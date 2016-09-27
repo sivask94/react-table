@@ -1,8 +1,29 @@
-var headers = ["Name", "Quantity", "Price"];
+var headers = [
+    {Name:'DisplayName'},
+    {Quantity:'Quantity in Kgs'},
+    {Price:'Price in Rs'}
+];
 var rows = [
-    ["Rice", "2kg", 100],
-    ["wheat", "4kg", 150],
-    ["Tomato", "6kg", 8]
+    {
+        Name:'Wheat',
+        Quantity:'5',
+        Price:'250'
+    },
+    {
+        Name:'Rice',
+        Quantity:'7',
+        Price:'350'
+    },
+    {
+        Name:'Tomato',
+        Quantity:'4',
+        Price:'65'
+    },
+    {
+        Name:'Onion',
+        Quantity:'3',
+        Price:'36'
+    }
 ];
 
 var HeaderCell = React.createClass({
@@ -17,7 +38,7 @@ var TableHeader = React.createClass({
     render: function () {
         return (
             <tr>
-                {this.props.head.map(function (data, idx) {
+                {this.props.head.map(function (data) {
                     return <HeaderCell data={data}/>;
                 })}
             </tr>
