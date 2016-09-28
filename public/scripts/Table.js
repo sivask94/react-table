@@ -1,8 +1,7 @@
 var headers = [
-
-{Name: 'DisplayName'},
-{Quantity: 'Quantity in Kgs'},
-{Price: 'Price in Rs'}
+    {key: "Name", label: 'DisplayName'},
+    {key: "Quantity", label: 'Quantity in Kgs'},
+    {key: "Price", label: 'Price in Rs'},
 ];
 var rows = [
     {
@@ -11,19 +10,18 @@ var rows = [
         Price: '128',
     },
     {
+        Price: '350',
         Name: 'Rice',
         Quantity: '7',
-        Price: '350'
     },
     {
-
-        Name: 'Tomato',
         Quantity: '4',
-        Price: '65'
+        Price: '65',
+        Name: 'Tomato',
     },
     {
-        Name: 'Onion',
         Quantity: '3',
+        Name: 'Onion',
         Price: '36',
 
     }
@@ -39,24 +37,12 @@ var HeaderCell = React.createClass({
 
 var TableHeader = React.createClass({
     getHeaderCells: function (heads) {
-        var cell=[];
-        for (var p in heads) {
-            if (heads.hasOwnProperty(p))
-                cell.push(<HeaderCell data={heads[p]}/>);
-        }
-        return cell;
+        return heads.map(function (header) {
+            return (<HeaderCell data={header.label}/>);
+        });
     },
     render: function () {
-        var sel=this;
-        return (
-            <tr>
-                {
-                    this.props.head.map(function(heads){
-                        return sel.getHeaderCells(heads);
-                    })
-                }
-            </tr>
-        );
+        return (<tr>{this.getHeaderCells(this.props.head)}</tr>);
     }
 });
 
@@ -69,45 +55,29 @@ var Rowcell = React.createClass({
 });
 
 var TableRows = React.createClass({
-
-    getRowKeys: function (row) {
-        var cells = [];
-        for (var k in row) {
-            if (row.hasOwnProperty(k))
-                cells.push(<Rowcell cell={row[k]}/>);
-        }
-        return cells;
-    },
-
-    getRow: function (row) {
-        return (
-            <tr>{this.getRowKeys(row)}</tr>
-        );
+    getRows: function (headers, rows) {
+        var rowElement = rows.map(function (row) {
+            var cells = headers.map(function (header) {
+                return (<Rowcell cell={row[header.key]}/>);
+            });
+            return (<tr>{cells}</tr>);
+        });
+        return rowElement;
     },
 
     render: function () {
-        var self = this;
         return (
-            <tbody>
-            {
-                this.props.rows.map(function (row) {
-                    console.log(row);
-                    return self.getRow(row);
-                })
-            }
-            </tbody>
+            <tbody>{ this.getRows(this.props.head, this.props.rows) }</tbody>
         );
     }
 });
 
 var Table = React.createClass({
     render: function () {
-
         return (
-
             <table>
                 <thead><TableHeader head={headers}/></thead>
-                <TableRows rows={rows}/>
+                <TableRows head={headers} rows={rows}/>
             </table>
         );
     }
