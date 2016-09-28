@@ -1,9 +1,8 @@
-var headers = {
-
-    Name:'DisplayName',
-    Quantity:'Quantity in Kgs',
-    Price:'Price in Rs'
-};
+var headers = [
+    {Name:'DisplayName'},
+    {Quantity:'Quantity in Kgs'},
+    {Price:'Price in Rs'}
+    ];
 var rows = [
     {
         Name:'Wheat',
@@ -39,17 +38,9 @@ var TableHeader = React.createClass({
     render: function () {
         return (
             <tr>
-                {
-
-                    for(var p in obj1)
-                    {
-                        if( data.hasOwnProperty (p) )
-                        {
-                            return <HeaderCell data={obj1[p]}/>;
-                        }
-
-                    }
-                }
+                {this.props.head.map(function (data) {
+                    return <HeaderCell data={data}/>;
+                })}
             </tr>
         );
     }
@@ -68,14 +59,9 @@ var TableRows = React.createClass({
         return (
             <tr>
                 {
-                    for(var k in obj)
-                    {
-                        if( obj.hasOwnProperty( k ) )
-                        {
-                            return <Rowcell cell={obj[k]}/>;
-
-                        }
-                    }
+                    row.map(function (elem) {
+                        return <Rowcell cell={elem}/>;
+                    })
                 }
             </tr>
         );
