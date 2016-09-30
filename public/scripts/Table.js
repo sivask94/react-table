@@ -1,50 +1,30 @@
 var headers = [
-    {key: "Name", label: 'DisplayName'},
-    {key: "Quantity", label: 'Quantity in Kgs'},
-    {key: "Price", label: 'Price in Rs'},
+    {key: "name", label: 'Display Name'},
+    {key: "qty", label: 'Quantity in Kgs'},
+    {key: "price", label: 'Price in Rs'},
 ];
 var rows = [
     {
-        Name: 'Wheat',
-        Quantity: '5',
-        Price: '128',
+        name: 'Wheat',
+        qty: '5',
+        price: '128',
     },
     {
-        Price: '350',
-        Name: 'Rice',
-        Quantity: '7',
+        price: '350',
+        name: 'Rice',
+        qty: '7',
     },
     {
-        Quantity: '4',
-        Price: '65',
-        Name: 'Tomato',
+        qty: '4',
+        price: '65',
+        name: 'Tomato',
     },
     {
-        Quantity: '3',
-        Name: 'Onion',
-        Price: '36',
-
+        qty: '3',
+        name: 'Onion',
+        price: '36',
     }
 ];
-
-var HeaderCell = React.createClass({
-    render: function () {
-        return (
-            <th>{this.props.data}</th>
-        );
-    }
-});
-
-var TableHeader = React.createClass({
-    getHeaderCells: function (heads) {
-        return heads.map(function (header) {
-            return (<HeaderCell data={header.label}/>);
-        });
-    },
-    render: function () {
-        return (<tr>{this.getHeaderCells(this.props.head)}</tr>);
-    }
-});
 
 var Rowcell = React.createClass({
     render: function () {
@@ -67,23 +47,74 @@ var TableRows = React.createClass({
 
     render: function () {
         return (
-            <tbody>{ this.getRows(this.props.head, this.props.rows) }</tbody>
+            <tbody>{ this.getRows(this.props.headers, this.props.rows) }</tbody>
         );
     }
 });
 
 var Table = React.createClass({
-    render: function () {
+    getInitialState : function () {
+        return {
+            sortKey : "name",
+            sortOrder : false
+        };
+    },
+
+    onHeaderClick : function (key) {
+        var sortOrder = !this.state.sortOrder;
+        this.setState({
+            sortKey: key,
+            sortOrder: sortOrder
+        });
+    },
+
+    getHeaderRow : function (data) {
+        var self = this;
+        return (<th onClick={function (e) {
+                self.onHeaderClick(data.key)
+            }}>{data.label}</th>
+        );
+    },
+
+    getTableHeader : function (headers) {
+        var self = this;
+        var headerElement = headers.map(function (header) {
+            return self.getHeaderRow(header);
+        });
+        return (<tr>{headerElement}</tr>);
+    },
+
+    render : function () {
+        var self = this;
+        var headers = this.props.headers;
+        var rows = this.props.rows;
+        rows.sort(function(ov, nv){
+            var sortOrder = self.state.sortOrder;
+            var sortKey = self.state.sortKey;
+            var oldVal = ov[sortKey];
+            var newVal = nv[sortKey];
+
+            if (sortOrder) {
+                if (oldVal < newVal) return -1;
+                if (oldVal > newVal) return 1;
+            } else {
+                if (oldVal > newVal) return -1;
+                if (oldVal < newVal) return 1;
+            }
+            return 0;
+        });
+
         return (
             <table>
-                <thead><TableHeader head={headers}/></thead>
-                <TableRows head={headers} rows={rows}/>
+                <thead>{this.getTableHeader(headers)}</thead>
+                <TableRows headers={headers} rows={rows}/>
             </table>
         );
     }
 });
 
 ReactDOM.render(
-    <Table/>,
+    <Table headers={headers} rows={rows}/>,
     document.getElementById('content')
 );
+
