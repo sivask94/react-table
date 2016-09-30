@@ -1,13 +1,12 @@
-table {
+table,th,td {
 
   border-collapse: collapse;
 }
 
 
-td {
+th,td {
 
   border: solid;
-
 
 }
 
