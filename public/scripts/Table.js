@@ -10,6 +10,11 @@ var rows = [
         price: '128',
     },
     {
+        name: 'Whey',
+        qty: '7',
+        price: '146',
+    },
+    {
         price: '350',
         name: 'Rice',
         qty: '7',
@@ -88,6 +93,10 @@ var Table = React.createClass({
         var self = this;
         var headers = this.props.headers;
         var rows = this.props.rows;
+        var ptn = new RegExp(this.props.searchText, 'i');
+        rows = rows.filter(function (row) {
+            return ptn.test(row.name);
+        });
         rows.sort(function(ov, nv){
             var sortOrder = self.state.sortOrder;
             var sortKey = self.state.sortKey;
@@ -113,8 +122,30 @@ var Table = React.createClass({
     }
 });
 
+var App = React.createClass({
+    getInitialState : function () {
+        return {
+            searchText : "",
+        };
+    },
+
+    onChange : function (e) {
+        this.setState({
+            searchText : e.target.value,
+        })
+    },
+
+    render : function () {
+        return(
+            <div>
+                <input type="text" onChange={this.onChange}/>
+                <Table headers={this.props.headers} rows={this.props.rows} searchText={this.state.searchText}/>
+            </div>
+        );
+    }
+})
+
 ReactDOM.render(
-    <Table headers={headers} rows={rows}/>,
+    <App headers={headers} rows={rows}/>,
     document.getElementById('content')
 );
-
